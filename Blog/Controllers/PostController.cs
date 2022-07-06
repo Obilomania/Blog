@@ -1,20 +1,21 @@
 ﻿using Blog.Data;
 using Blog.Models;
+using Blog.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
     public class PostController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IPostRepository _db;
 
-        public PostController(ApplicationDbContext db)
+        public PostController(IPostRepository db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            IEnumerable<Post> posts = _db.Posts.ToList();
+            IEnumerable<Post> posts = _db.GetAll();
             return View(posts);
         }
 
@@ -31,8 +32,8 @@ namespace Blog.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Posts.Add(post);
-                _db.SaveChanges();
+                _db.Add(post);
+                _db.Save();
                 return RedirectToAction("Index");
             }
             return View(post);
@@ -45,7 +46,7 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
-            var post = _db.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _db.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -60,8 +61,8 @@ namespace Blog.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Posts.Update(post);
-                _db.SaveChanges();
+                _db.Update(post);
+                _db.Save();
                 return RedirectToAction("Index");
             }
             return View(post);
@@ -74,7 +75,7 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
-            var post = _db.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _db.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -87,13 +88,13 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST (int? id)
         {
-            var post = _db.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _db.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
             }
-            _db.Posts.Remove(post);
-            _db.SaveChanges();
+            _db.Remove(post);
+            _db.Save();
             return RedirectToAction("Index");
         }
 
@@ -106,7 +107,7 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
-            var post = _db.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _db.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
