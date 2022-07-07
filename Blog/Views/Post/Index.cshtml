@@ -4,43 +4,50 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<div class="row">
+    <div class="text-center">
+        <h2 class="text-primary">Posts</h2>
+    </div>
+    <div class="col-12 text-end">
+        <a asp-action="Create" class="btn btn-success"> <i class="bi bi-plus-circle"></i> Create Post</a>
+    </div>
+</div>
+<br />
+
+
+<table class="table table-bordered table-striped" style="width:100%">
     <thead>
         <tr>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.ImageUrl)
             </th>
-            <th></th>
+            <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
+            <tr style="width:100%;">
+                <td class="text-center" style="width:25%; overflow:hidden">
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td>
+                <td class="text-center" style="width:25%; overflow:hidden">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
-                <td>
+                <td class="text-center" style="width:25%; overflow:hidden">
                     <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" style="width:100px; height:100px; overflow:hidden;" />
                 </td>
-                <td>
-                    <a asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="Post" asp-action="Detail" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <td class="text-center" style="width:25%; overflow:hidden">
+                    <a class="btn btn-secondary" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a> 
+                    <a class="btn btn-info" asp-controller="Post" asp-action="Detail" asp-route-id="@item.Id"><i class="bi bi-info-circle"></i></a>
+                    <a class="btn btn-primary" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-x-circle"></i></a>
                 </td>
             </tr>
         }
