@@ -57,9 +57,18 @@ body {
 
 
 /*CARD STYLING*/
-.card-container{
-    width:100%;
-    padding:0;
+.post-data{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-evenly;
+    gap:1rem;
+    flex-wrap:wrap;
+}
+.card-container {
+    width: 100%;
+    padding: 0;
+    display:flex;
 }
 .post-card{
     display:flex;
@@ -69,8 +78,6 @@ body {
     width:20rem;
     height:28rem;
     background:white;
-    margin:3rem;
-    padding:3rem;
     border-radius:2rem;
     position:relative;
 }

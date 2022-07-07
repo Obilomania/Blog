@@ -1,10 +1,12 @@
 ﻿using Blog.Data;
 using Blog.Models;
 using Blog.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
+    [Authorize(Roles = "Admin, Moderator")]
     public class PostController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

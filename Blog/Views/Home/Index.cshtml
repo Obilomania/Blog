@@ -7,14 +7,26 @@
 <br />
 <div class="text-center">
     <h1 class="display-4 fw-bold">Welcome To Slayers Fashion Blog</h1>
-    <h5>Fashion is Art and Art is Fashion <i class="bi bi-emoji-laughing"></i></h5>
+    <h5>Fashion is Art and Art is Fashion as said By Obilomania<i class="bi bi-emoji-laughing"></i></h5>
+
+    @if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin"))
+    {
+        <h6 class="text-info">Your Role is an Admin</h6>
+    }
+    else
+    {
+        <h6 class="text-info">Your role is a Moderator</h6>
+    }
+}
 </div>
 <br />
 <br />
 <div class="card index-card">
 
     <div class="card-container" style="padding:2rem; ">
-        <div class="row">
+        <div class="post-data">
             @foreach (var item in Model)
             {
                 <div class="post-card">
