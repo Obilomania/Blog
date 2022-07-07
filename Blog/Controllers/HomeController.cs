@@ -18,7 +18,7 @@ namespace Blog.Controllers
 
         public IActionResult Index(int pageNumber=1, int pageSize=1)
         {
-            int ExcludeRecords = 
+             
             IEnumerable<Post> posts = _unitOfWork.Post.GetAll();
             return View(posts);
         }

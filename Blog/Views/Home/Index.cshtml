@@ -21,7 +21,7 @@
                     <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="post-image" >
                     <h3 class="text-info text-center">@Html.DisplayFor(modelItem => item.Title)</h3>
                     <p>
-                        <a class="btn btn-info" id="button" asp-controller="Post" asp-action="Detail" asp-route-id="@item.Id">Read More...</a>
+                        <a class="btn btn-info" id="button" asp-controller="Home" asp-action="Detail" asp-route-id="@item.Id">Read More...</a>
                     </p>
 
                 </div>
