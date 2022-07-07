@@ -22,7 +22,7 @@
             <input asp-for="ImageUrl" class="form-control" disabled />
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Delete</button>
-        <a asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-secondary" style="width:150px">Back To List</a>
+        <a asp-controller="Post" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary" style="width:150px">Back To List</a>
     </div>
 </form>
 

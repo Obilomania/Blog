@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blog.Models
 {
@@ -10,7 +11,7 @@ namespace Blog.Models
         public string? Title { get; set; }
         [Required]
         public string Description { get; set; }
-        [Required]
+        [ValidateNever]
         [Display(Name ="Image")]
         public string? ImageUrl { get; set; }
 

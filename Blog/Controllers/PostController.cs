@@ -7,15 +7,17 @@ namespace Blog.Controllers
 {
     public class PostController : Controller
     {
-        private readonly IPostRepository _db;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public PostController(IPostRepository db)
+        public PostController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
+            _hostEnvironment = hostEnvironment;
         }
         public IActionResult Index()
         {
-            IEnumerable<Post> posts = _db.GetAll();
+            IEnumerable<Post> posts = _unitOfWork.Post.GetAll();
             return View(posts);
         }
 
@@ -27,13 +29,40 @@ namespace Blog.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Post post)
+        public IActionResult Create(Post post, IFormFile file)
         {
 
             if (ModelState.IsValid)
             {
-                _db.Add(post);
-                _db.Save();
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(wwwRootPath, @"images\products");
+                    var extension = Path.GetExtension(file.FileName);
+
+                    if (post.ImageUrl != null)
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, post.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams);
+                    }
+                    post.ImageUrl = @"\images\products\" + fileName + extension;
+                }
+                if (post.Id == 0)
+                {
+                    _unitOfWork.Post.Add(post);
+
+                }
+
+                _unitOfWork.Save();
                 return RedirectToAction("Index");
             }
             return View(post);
@@ -46,7 +75,7 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
-            var post = _db.GetFirstOrDefault(p => p.Id == id);
+            var post = _unitOfWork.Post.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -57,16 +86,80 @@ namespace Blog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Post post)
+        public IActionResult Edit(Post post, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                _db.Update(post);
-                _db.Save();
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(wwwRootPath, @"images\products");
+                    var extension = Path.GetExtension(file.FileName);
+
+                    //if (post.ImageUrl != null)
+                    //{
+                    //    var oldImagePath = Path.Combine(wwwRootPath, post.ImageUrl.TrimStart('\\'));
+                    //    if (System.IO.File.Exists(oldImagePath))
+                    //    {
+                    //        System.IO.File.Delete(oldImagePath);
+                    //    }
+                    //}
+
+                    using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        file.CopyTo(fileStreams);
+                    }
+                    post.ImageUrl = @"\images\products\" + fileName + extension;
+                }
+
+                if (post.Id != 0)
+                {
+                _unitOfWork.Post.Update(post);
+                }
+
+                _unitOfWork.Save();
                 return RedirectToAction("Index");
             }
             return View(post);
         }
+
+
+        ////UPSERT
+        //public IActionResult Upsert(int? id)
+        //{
+        //    Post post = new Post();
+        //    if (id == null || id == 0)
+        //    {
+        //        return View(post);
+        //    }
+        //    else
+        //    {
+
+        //    }
+            
+        //    return View(post);
+        //}
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Upsert(Post post)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+
+
+
+        //        _unitOfWork.Post.Update(post);
+        //        _unitOfWork.Save();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(post);
+        //}
+
+
 
         //DELETE
         public IActionResult Delete(int? id)
@@ -75,7 +168,7 @@ namespace Blog.Controllers
             {
                 return NotFound();
             }
-            var post = _db.GetFirstOrDefault(p => p.Id == id);
+            var post = _unitOfWork.Post.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -88,34 +181,37 @@ namespace Blog.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST (int? id)
         {
-            var post = _db.GetFirstOrDefault(p => p.Id == id);
+            var post = _unitOfWork.Post.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
             }
-            _db.Remove(post);
-            _db.Save();
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, post.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Post.Remove(post);
+            _unitOfWork.Save();
             return RedirectToAction("Index");
         }
 
 
 
-        //EDIT
+        //DETAIL
         public IActionResult Detail(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var post = _db.GetFirstOrDefault(p => p.Id == id);
+            var post = _unitOfWork.Post.GetFirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
             }
             return View(post);
         }
-
-
-
     }
 }
