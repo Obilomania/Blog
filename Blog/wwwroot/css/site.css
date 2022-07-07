@@ -7,6 +7,9 @@ html {
         font-size: 16px;
     }
 }
+a{
+    text-decoration:none;
+}
 
 html {
     position: relative;
@@ -51,3 +54,44 @@ body {
             .imageform .grid .form-element div span {
                 font-size: 40px;
             }
+
+
+/*CARD STYLING*/
+.card-container{
+    width:100%;
+    padding:0;
+}
+.post-card{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    width:20rem;
+    height:28rem;
+    background:white;
+    margin:3rem;
+    padding:3rem;
+    border-radius:2rem;
+    position:relative;
+}
+    .post-card h3 {
+        position: absolute;
+        top: 60%;
+        left: 0;
+        width: 100%;
+        height: 2rem;
+    }
+    .post-card img {
+        position: absolute;
+        top:.6rem;
+        width: 300px;
+        height: 250px;
+        border-radius: 2rem;
+    }
+    .post-card #button {
+        position: absolute;
+        top: 90%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+       
+    }
